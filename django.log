@@ -25,3 +25,5 @@ INFO 2025-07-12 11:00:39,380 autoreload 46623 124152496103552 /home/skillz/djang
 INFO 2025-07-12 11:00:40,717 autoreload 47345 134441729704064 Watching for file changes with StatReloader
 INFO 2025-07-12 11:01:44,968 autoreload 47345 134441729704064 /home/skillz/django_mp3_project/mp3_project/settings.py changed, reloading.
 INFO 2025-07-12 11:01:45,596 autoreload 47354 128574539915392 Watching for file changes with StatReloader
+INFO 2025-07-12 11:02:55,356 autoreload 47354 128574539915392 /home/skillz/django_mp3_project/mp3_project/settings.py changed, reloading.
+INFO 2025-07-12 11:02:56,039 autoreload 47446 123948306608256 Watching for file changes with StatReloader
