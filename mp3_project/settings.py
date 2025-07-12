@@ -84,7 +84,7 @@ ROOT_URLCONF = 'mp3_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [], # Often include BASE_DIR / 'templates' for project-level templates
+        'DIRS': [BASE_DIR, 'templates'], # Often include BASE_DIR / 'templates' for project-level templates
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -160,19 +160,6 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
-
-# This is the URL prefix for serving static files in templates.
-# Example: <img src="{% static 'images/logo.png' %}"> -> /static/images/logo.png
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') # Or any other suitable path outside your project apps
-
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'), # If you have a project-level 'static' directory
-]
-
-
 # Media files (user-uploaded content)
 # https://docs.djangoproject.com/en/4.2/topics/files/
 
@@ -246,3 +233,12 @@ LOGGING = {
 #     ('Your Name', 'your_email@example.com'),
 # ]
 # MANAGERS = ADMINS # Managers get messages when BrokenLink emails are sent
+
+
+
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+
+]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') 

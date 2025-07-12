@@ -5,3 +5,23 @@ INFO 2025-07-12 10:25:21,758 autoreload 45473 128495435432064 /home/skillz/djang
 INFO 2025-07-12 10:25:22,379 autoreload 45948 126337709846656 Watching for file changes with StatReloader
 INFO 2025-07-12 10:44:51,332 autoreload 45948 126337709846656 /home/skillz/django_mp3_project/mp3_project/settings.py changed, reloading.
 INFO 2025-07-12 10:44:53,036 autoreload 46623 124152496103552 Watching for file changes with StatReloader
+WARNING 2025-07-12 10:53:15,689 log 46623 124152428099264 Not Found: /
+WARNING 2025-07-12 10:53:15,690 basehttp 46623 124152428099264 "GET / HTTP/1.1" 404 2294
+INFO 2025-07-12 10:53:17,161 basehttp 46623 124152428099264 "GET /admin/ HTTP/1.1" 302 0
+INFO 2025-07-12 10:53:17,279 basehttp 46623 124152428099264 "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4181
+INFO 2025-07-12 10:53:17,413 basehttp 46623 124152428099264 "GET /static/admin/css/base.css HTTP/1.1" 200 21310
+INFO 2025-07-12 10:53:17,413 basehttp 46623 124152203704000 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2694
+INFO 2025-07-12 10:53:17,419 basehttp 46623 124152418657984 "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2929
+INFO 2025-07-12 10:53:17,419 basehttp 46623 124152195311296 "GET /static/admin/css/login.css HTTP/1.1" 200 958
+INFO 2025-07-12 10:53:17,421 basehttp 46623 124152186918592 "GET /static/admin/css/responsive.css HTTP/1.1" 200 18559
+INFO 2025-07-12 10:53:17,431 basehttp 46623 124152195311296 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+INFO 2025-07-12 10:53:17,432 basehttp 46623 124152418657984 "GET /static/admin/js/theme.js HTTP/1.1" 200 1943
+WARNING 2025-07-12 10:53:23,451 log 46623 124152418657984 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-07-12 10:53:23,452 basehttp 46623 124152418657984 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 2456
+INFO 2025-07-12 10:53:27,659 basehttp 46623 124152418657984 "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4181
+WARNING 2025-07-12 10:53:28,310 log 46623 124152418657984 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-07-12 10:53:28,314 basehttp 46623 124152418657984 "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 2456
+INFO 2025-07-12 11:00:39,380 autoreload 46623 124152496103552 /home/skillz/django_mp3_project/mp3_project/settings.py changed, reloading.
+INFO 2025-07-12 11:00:40,717 autoreload 47345 134441729704064 Watching for file changes with StatReloader
+INFO 2025-07-12 11:01:44,968 autoreload 47345 134441729704064 /home/skillz/django_mp3_project/mp3_project/settings.py changed, reloading.
+INFO 2025-07-12 11:01:45,596 autoreload 47354 128574539915392 Watching for file changes with StatReloader
