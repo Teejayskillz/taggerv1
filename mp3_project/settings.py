@@ -34,20 +34,8 @@ if not SECRET_KEY:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False').lower() == 'true' # Converts "True"/"False" strings to boolean
 
-# ALLOWED_HOSTS: Crucial for production security (DEBUG=False).
-# It's best to get this from an environment variable and split it.
-# Use a comma-separated list in your .env, e.g., ALLOWED_HOSTS=mp3.jaraflix.com,www.mp3.jaraflix.com,127.0.0.1
-ALLOWED_HOSTS_STR = os.getenv('ALLOWED_HOSTS', '') # Provide a default empty string
-if ALLOWED_HOSTS_STR:
-    ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS_STR.split(',')]
-else:
-    # If ALLOWED_HOSTS is not set in .env, default to localhost for DEBUG=True
-    # or raise an error for production.
-    if DEBUG:
-        ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
-    else:
-        raise Exception("ALLOWED_HOSTS environment variable must be set in production (when DEBUG is False).")
 
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'mp3.jaraflix.com']
 
 # Application definition
 
