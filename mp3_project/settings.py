@@ -15,7 +15,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 import dj_database_url
 
-# Load environment variables from .env file
+# Load environment variables from .env file.
+# It's good practice to place this at the very top of your settings file.
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -27,12 +28,25 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY')
+if not SECRET_KEY:
+    raise Exception("SECRET_KEY environment variable is not set!") # Ensure SECRET_KEY is always set
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False').lower() == 'true' # Converts "True"/"False" strings to boolean
 
-ALLOWED_HOSTS_STR = os.getenv('ALLOWED_HOSTS')
-ALLOWED_HOSTS = ['mp3.jaraflix.com']
+# ALLOWED_HOSTS: Crucial for production security (DEBUG=False).
+# It's best to get this from an environment variable and split it.
+# Use a comma-separated list in your .env, e.g., ALLOWED_HOSTS=mp3.jaraflix.com,www.mp3.jaraflix.com,127.0.0.1
+ALLOWED_HOSTS_STR = os.getenv('ALLOWED_HOSTS', '') # Provide a default empty string
+if ALLOWED_HOSTS_STR:
+    ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS_STR.split(',')]
+else:
+    # If ALLOWED_HOSTS is not set in .env, default to localhost for DEBUG=True
+    # or raise an error for production.
+    if DEBUG:
+        ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+    else:
+        raise Exception("ALLOWED_HOSTS environment variable must be set in production (when DEBUG is False).")
 
 
 # Application definition
@@ -43,7 +57,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'django.contrib.staticfiles', # Make sure this is present for static files
     'mp3_editor',
     'mp3_zipper',
 ]
@@ -56,14 +70,33 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # If you are serving over HTTPS behind a proxy (like Nginx/Apache),
+    # consider adding WhiteNoise for static files, but ensure your web server
+    # is also configured correctly. For now, rely on web server config.
+    # 'whitenoise.middleware.WhiteNoiseMiddleware', # Add this if you want WhiteNoise
 ]
+
+# If you are using HTTPS behind a reverse proxy (e.g., Nginx, Apache),
+# Django needs to know that the original request was secure.
+# This prevents issues with CSRF and secure cookies.
+# The 'HTTP_X_FORWARDED_PROTO' header is typically set by proxies.
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    # Force all non-HTTPS requests to redirect to HTTPS
+    SECURE_SSL_REDIRECT = True
+    # Ensure CSRF cookie is only sent over HTTPS
+    CSRF_COOKIE_SECURE = True
+    # Ensure session cookie is only sent over HTTPS
+    SESSION_COOKIE_SECURE = True
+    # Add a security header that prevents some XSS attacks
+    X_FRAME_OPTIONS = 'DENY' # Good default, especially for admin
 
 ROOT_URLCONF = 'mp3_project.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [], # Often include BASE_DIR / 'templates' for project-level templates
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -82,28 +115,29 @@ WSGI_APPLICATION = 'mp3_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-if DEBUG:
-    # Use SQLite for local development when DEBUG is True
+# It's better to always use dj_database_url, even for SQLite,
+# and have a consistent DATABASE_URL env var for all environments.
+# This makes deployment smoother.
+DATABASE_URL_FROM_ENV = os.getenv('DATABASE_URL')
+
+if DATABASE_URL_FROM_ENV:
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
+        'default': dj_database_url.config(
+            default=DATABASE_URL_FROM_ENV,
+            conn_max_age=600 # Keep connections alive for performance
+        )
     }
 else:
-    # Use DATABASE_URL from environment for production when DEBUG is False
-    DATABASE_URL_FROM_ENV = os.getenv('DATABASE_URL')
-    if DATABASE_URL_FROM_ENV:
+    # Fallback to SQLite for development if DATABASE_URL is not set
+    if DEBUG:
         DATABASES = {
-            'default': dj_database_url.config(
-                default=DATABASE_URL_FROM_ENV,
-                conn_max_age=600
-            )
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+            }
         }
     else:
-        # Fallback or raise an error if DATABASE_URL is not set in production
-        # It's highly recommended to raise an error to prevent accidental
-        # deployment without a proper database configuration.
+        # Absolutely require DATABASE_URL in production
         raise Exception("DATABASE_URL environment variable must be set in production (when DEBUG is False).")
 
 
@@ -141,15 +175,97 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
+# This is the URL prefix for serving static files in templates.
+# Example: <img src="{% static 'images/logo.png' %}"> -> /static/images/logo.png
 STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# STATIC_ROOT is the ABSOLUTE path to the directory where `collectstatic` will
+# gather all static files from your apps and STATICFILES_DIRS.
+# This is the directory that your web server (Nginx/Apache) needs to serve.
+# It's good practice to name it something like 'staticfiles_collected' to distinguish
+# it from 'static' folders inside apps or in STATICFILES_DIRS.
+STATIC_ROOT = BASE_DIR / 'staticfiles_collected' # Using Path object for consistency
+
+# STATICFILES_DIRS is a list of directories where Django's staticfiles app will
+# look for additional static files, not necessarily tied to a specific app.
+# Your original 'os.path.join(BASE_DIR, 'static')' suggests you have a
+# top-level 'static' folder for general project assets. Ensure this directory exists.
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+    BASE_DIR / 'static', # Using Path object for consistency
+    # Example: '/home/jaraflix/global_assets', if you have external assets
 ]
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+# Media files (user-uploaded content)
+# https://docs.djangoproject.com/en/4.2/topics/files/
+
+# MEDIA_ROOT is the ABSOLUTE path to the directory where user-uploaded files will be stored.
+# This directory also needs to be served by your web server, but separately from static files.
+MEDIA_ROOT = BASE_DIR / 'media' # Using Path object for consistency
+
+# MEDIA_URL is the URL prefix for serving user-uploaded media files.
+# Example: <img src="{{ user.profile.image.url }}"> -> /media/profile_pics/user1.jpg
 MEDIA_URL = '/media/'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Logging configuration (highly recommended for production)
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO', # Log INFO and above to console in production
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple' if DEBUG else 'verbose',
+        },
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'django.log', # Log to a file
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO', # Set to DEBUG for very verbose logs, INFO for general
+            'propagate': False,
+        },
+        'mp3_editor': { # Logger for your specific app
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG', # You might want more verbose logs for your app
+            'propagate': False,
+        },
+        'mp3_zipper': { # Logger for your specific app
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+    'root': {
+        'handlers': ['console', 'file'],
+        'level': 'WARNING', # Default for unhandled log messages
+    },
+}
+
+# ADMINS and MANAGERS for error emails (production)
+# If you want Django to email admins on server errors when DEBUG=False
+# ADMINS = [
+#     ('Your Name', 'your_email@example.com'),
+# ]
+# MANAGERS = ADMINS # Managers get messages when BrokenLink emails are sent
