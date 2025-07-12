@@ -165,22 +165,11 @@ USE_TZ = True
 
 # This is the URL prefix for serving static files in templates.
 # Example: <img src="{% static 'images/logo.png' %}"> -> /static/images/logo.png
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') # Or any other suitable path outside your project apps
 
-# STATIC_ROOT is the ABSOLUTE path to the directory where `collectstatic` will
-# gather all static files from your apps and STATICFILES_DIRS.
-# This is the directory that your web server (Nginx/Apache) needs to serve.
-# It's good practice to name it something like 'staticfiles_collected' to distinguish
-# it from 'static' folders inside apps or in STATICFILES_DIRS.
-STATIC_ROOT = BASE_DIR / 'staticfiles_collected' # Using Path object for consistency
-
-# STATICFILES_DIRS is a list of directories where Django's staticfiles app will
-# look for additional static files, not necessarily tied to a specific app.
-# Your original 'os.path.join(BASE_DIR, 'static')' suggests you have a
-# top-level 'static' folder for general project assets. Ensure this directory exists.
 STATICFILES_DIRS = [
-    BASE_DIR / 'static', # Using Path object for consistency
-    # Example: '/home/jaraflix/global_assets', if you have external assets
+    os.path.join(BASE_DIR, 'static'), # If you have a project-level 'static' directory
 ]
 
 
