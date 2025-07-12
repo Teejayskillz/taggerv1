@@ -35,7 +35,7 @@ if not SECRET_KEY:
 DEBUG = os.getenv('DEBUG', 'False').lower() == 'true' # Converts "True"/"False" strings to boolean
 
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'mp3.jaraflix.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'mp3.jaraflix.com', 'www.mp3.jaraflix.com']
 
 # Application definition
 
