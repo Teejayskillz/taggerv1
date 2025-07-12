@@ -32,7 +32,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = os.getenv('DEBUG', 'False').lower() == 'true' # Converts "True"/"False" strings to boolean
 
 ALLOWED_HOSTS_STR = os.getenv('ALLOWED_HOSTS')
-ALLOWED_HOSTS = ALLOWED_HOSTS_STR.split(',') if ALLOWED_HOSTS_STR else []
+ALLOWED_HOSTS = ['mp3.jaraflix.com']
 
 
 # Application definition
