@@ -6,7 +6,7 @@
         body {
             background: #0f0f0f;
             color: #fff;
-            font-family: Arial;
+            font-family: Arial, sans-serif;
         }
         form {
             max-width: 500px;
@@ -15,14 +15,21 @@
             padding: 20px;
             border-radius: 10px;
         }
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
         input, button {
             width: 100%;
             padding: 12px;
-            margin-top: 10px;
             border-radius: 6px;
             border: none;
+            font-size: 16px;
         }
         button {
+            margin-top: 20px;
             background: #1db954;
             font-weight: bold;
             cursor: pointer;
@@ -35,10 +42,19 @@
     {% csrf_token %}
     <h2>Upload MP3</h2>
 
+    <label for="{{ form.url.id_for_label }}">MP3 URL</label>
     {{ form.url }}
+
+    <label for="{{ form.title.id_for_label }}">Title</label>
     {{ form.title }}
+
+    <label for="{{ form.artist.id_for_label }}">Artist</label>
     {{ form.artist }}
+
+    <label for="{{ form.album.id_for_label }}">Album</label>
     {{ form.album }}
+
+    <label for="{{ form.genre.id_for_label }}">Genre</label>
     {{ form.genre }}
 
     <button type="submit">Upload</button>
