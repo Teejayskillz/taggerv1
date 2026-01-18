@@ -4,6 +4,10 @@ import re
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from wsgiref.util import FileWrapper # Efficiently serves large files
+from django.shortcuts import render, redirect
+from .forms import MP3UploadForm
+from .utils import process_mp3
+
 
 # Assuming your MP3File model is in your_app_name/models.py
 from .models import MP3File 
@@ -41,3 +45,24 @@ def download_mp3_file(request, pk):
     else:
         # If the file doesn't exist on disk, return a 404 error
         return HttpResponse("File not found.", status=404)
+    
+
+def upload_mp3(request):
+    if request.method == 'POST':
+        form = MP3UploadForm(request.POST)
+        if form.is_valid():
+            mp3 = form.save(commit=False)
+            mp3.save()
+            process_mp3(mp3)
+
+            return redirect('mp3_editor:upload_success', pk=mp3.pk)
+    else:
+        form = MP3UploadForm()
+
+    return render(request, 'mp3_editor/upload.html', {'form': form})
+
+
+def upload_success(request, pk):
+    from .models import MP3File
+    mp3 = MP3File.objects.get(pk=pk)
+    return render(request, 'mp3_editor/success.html', {'mp3': mp3})

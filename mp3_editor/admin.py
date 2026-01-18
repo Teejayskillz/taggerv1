@@ -68,8 +68,7 @@ class MP3FileAdmin(admin.ModelAdmin):
 
     # --- MODIFIED download_link METHOD TO CHECK FOR PK ---
     def download_link(self, obj):
-        if obj.pk: # Only generate the link if the object has been saved and has a primary key
-            # Make sure 'mp3_editor' matches the app_name you set in your_app_name/urls.py
+        if obj.pk:          
             download_url = reverse('mp3_editor:download_mp3', args=[obj.pk]) 
             return f'<a href="{download_url}">Download</a>'
         return "(Save to get download link)" # Display a message for new objects

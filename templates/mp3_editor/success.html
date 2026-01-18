@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Success - Jaraflix</title>
+    <style>
+        body {
+            background: #0f0f0f;
+            color: #fff;
+            font-family: Arial;
+            text-align: center;
+            padding: 40px;
+        }
+        .box {
+            max-width: 600px;
+            margin: auto;
+            background: #1a1a1a;
+            padding: 25px;
+            border-radius: 12px;
+        }
+        audio {
+            width: 100%;
+            margin-top: 20px;
+        }
+        .btn {
+            display: inline-block;
+            background: #1db954;
+            color: #000;
+            padding: 12px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        textarea {
+            width: 100%;
+            background: #000;
+            color: #0f0;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h1>✅ Upload Successful</h1>
+
+    <h3>{{ mp3.title }}</h3>
+    <p>{{ mp3.artist }} • {{ mp3.genre }}</p>
+
+    <!-- EMBED PLAYER (same as admin embedded_code) -->
+    <audio controls>
+        <source src="{{ mp3.file.url }}" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- DOWNLOAD LINK (same as admin download_link) -->
+    <br>
+    <a class="btn" href="{% url 'mp3_editor:download_mp3' mp3.pk %}">
+        ⬇ Download MP3
+    </a>
+
+    <!-- EMBED CODE COPY -->
+    <h4>Embed Code</h4>
+    <textarea rows="4" readonly>
+<audio controls>
+  <source src="{{ mp3.file.url }}" type="audio/mpeg">
+</audio>
+    </textarea>
+
+    <br><br>
+    <a href="{% url 'mp3_editor:upload_mp3' %}" class="btn">
+        Upload Another
+    </a>
+</div>
+
+</body>
+</html>
