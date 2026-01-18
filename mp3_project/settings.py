@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles', # Make sure this is present for static files
-    'django.contrib.staticfiles',
     'mp3_editor',
     'mp3_zipper',
 ]
